@@ -20,6 +20,15 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class Plan {
+  String name;
+  String description;
+  String date;
+  bool isCompleted;
+
+  Plan({required this.name, required this.description, required this.date, this.isCompleted = false});
+}
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
   final String title;
@@ -29,11 +38,29 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  List<Plan> plans = [];
 
-  void _incrementCounter() {
+  void _addPlan(String name, String description, String date) {
     setState(() {
-      _counter++;
+      plans.add(Plan(name: name, description: description, date: date));
+    });
+  }
+
+  void _editPlan(int index, String newName) {
+    setState(() {
+      plans[index].name = newName;
+    });
+  }
+
+  void _toggleComplete(int index) {
+    setState(() {
+      plans[index].isCompleted = !plans[index].isCompleted;
+    });
+  }
+
+  void _deletePlan(int index) {
+    setState(() {
+      plans.removeAt(index);
     });
   }
 
