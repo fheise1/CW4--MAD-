@@ -64,6 +64,52 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _showAddPlanDialog() {
+    String newName = '';
+    String newDescription = '';
+    String newDate = '';
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Create Plan'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              decoration: const InputDecoration(labelText: 'Plan Name'),
+              onChanged: (value) => newName = value,
+            ),
+            TextField(
+              decoration: const InputDecoration(labelText: 'Description'),
+              onChanged: (value) => newDescription = value,
+            ),
+            TextField(
+              decoration: const InputDecoration(labelText: 'Date'),
+              onChanged: (value) => newDate = value,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (newName.isNotEmpty) {
+                _addPlan(newName, newDescription, newDate);
+                Navigator.of(context).pop();
+              }
+            },
+            child: const Text('Add Plan'),
+          ),
+        ],
+      ),
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
