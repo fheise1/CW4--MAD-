@@ -10,12 +10,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Course Work',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Course Work 4'),
     );
   }
 }
@@ -113,29 +113,59 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+      appBar: AppBar(title: const Text('Plan Manager')),
+      body: ListView.builder(
+        itemCount: plans.length,
+        itemBuilder: (context, index) => Dismissible(
+          key: Key(plans[index].name),
+          background: Container(color: Colors.green),
+          secondaryBackground: Container(color: Colors.red),
+          onDismissed: (direction) => _deletePlan(index),
+          child: ListTile(
+            title: Text(
+              plans[index].name,
+              style: TextStyle(
+                color: plans[index].isCompleted ? Colors.green : Colors.black,
+                decoration: plans[index].isCompleted
+                    ? TextDecoration.lineThrough
+                    : TextDecoration.none,
+              ),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+            subtitle: Text("${plans[index].description} - ${plans[index].date}"),
+            onTap: () => _toggleComplete(index),
+            onLongPress: () {
+              String updatedName = plans[index].name;
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Edit Plan'),
+                  content: TextField(
+                    controller: TextEditingController(text: updatedName),
+                    onChanged: (value) => updatedName = value,
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text('Cancel'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        _editPlan(index, updatedName);
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Save'),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: _showAddPlanDialog,
         child: const Icon(Icons.add),
-      ), 
+      ),
     );
   }
 }
